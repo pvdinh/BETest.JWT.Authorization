@@ -1,21 +1,19 @@
 package com.example.BETest.response;
-import com.example.BETest.object.Student;
-
 import java.util.List;
 
-public class ResponseStudent extends BaseResponse {
-    private List<Student> data;
+public class ResponseStudent<T> extends BaseResponse {
+    private List<T> data;
 
-    public ResponseStudent(int statusCode, List<Student> data) {
+    public ResponseStudent(int statusCode, List<T> data) {
         super(statusCode);
         this.data = data;
     }
 
-    public List<Student> getData() {
+    public List<T> getData() {
         return data;
     }
 
-    public void setData(List<Student> data) {
+    public void setData(List<T> data) {
         this.data = data;
     }
 }
