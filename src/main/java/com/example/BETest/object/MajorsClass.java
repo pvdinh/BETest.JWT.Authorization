@@ -2,6 +2,7 @@ package com.example.BETest.object;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.HashSet;
 import java.util.List;
 
 @Document
@@ -9,16 +10,15 @@ public class MajorsClass {
     private String id;
     private String name;
     private int totalStudent;
-    private List<String> listStudents;
+    private HashSet<String> listStudents;
 
     public MajorsClass() {
         super();
     }
 
-    public MajorsClass(String id, String name, int totalStudent, List<String> listStudents) {
+    public MajorsClass(String id, String name, HashSet<String> listStudents) {
         this.id = id;
         this.name = name;
-        this.totalStudent = totalStudent;
         this.listStudents = listStudents;
     }
 
@@ -39,18 +39,18 @@ public class MajorsClass {
     }
 
     public int getTotalStudent() {
-        return totalStudent;
+        return listStudents.size();
     }
 
-    public void setTotalStudent(int totalStudent) {
-        this.totalStudent = totalStudent;
+    public void setTotalStudent() {
+        this.totalStudent = listStudents.size();
     }
 
-    public List<String> getListStudents() {
+    public HashSet<String> getListStudents() {
         return listStudents;
     }
 
-    public void setListStudents(List<String> listStudents) {
+    public void setListStudents(HashSet<String> listStudents) {
         this.listStudents = listStudents;
     }
 }

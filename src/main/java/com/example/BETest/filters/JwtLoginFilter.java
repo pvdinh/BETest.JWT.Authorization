@@ -3,6 +3,7 @@ package com.example.BETest.filters;
 import com.example.BETest.object.AccountCredentials;
 import com.example.BETest.object.Student;
 import com.example.BETest.service.TokenAuthenticationService;
+import com.google.gson.Gson;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -14,6 +15,7 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Collections;
 
@@ -25,7 +27,9 @@ public class JwtLoginFilter extends AbstractAuthenticationProcessingFilter {
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws AuthenticationException, IOException, ServletException {
-        AccountCredentials credentials = new AccountCredentials(httpServletRequest.getParameter("id"), httpServletRequest.getParameter("password"));
+        BufferedReader reader = httpServletRequest.getReader();
+        Gson gson = new Gson();
+        AccountCredentials credentials = gson.fromJson(reader, AccountCredentials.class);
         Authentication authentication = getAuthenticationManager().authenticate(
                 new UsernamePasswordAuthenticationToken(
                         credentials.getUsername(),

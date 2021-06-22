@@ -1,10 +1,10 @@
 package com.example.BETest.response;
 import java.util.List;
 
-public class ResponseStudent<T> extends BaseResponse {
+public class Response<T> extends BaseResponse {
     private List<T> data;
 
-    public ResponseStudent(int statusCode, List<T> data) {
+    public Response(int statusCode, List<T> data) {
         super(statusCode);
         this.data = data;
     }

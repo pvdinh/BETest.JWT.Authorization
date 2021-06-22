@@ -1,9 +1,9 @@
 package com.example.BETest.response;
 
-public class ResponseExists extends BaseResponse {
+public class ResponseMessage extends BaseResponse {
     private String message;
 
-    public ResponseExists(int statusCode, String message) {
+    public ResponseMessage(int statusCode, String message) {
         super(statusCode);
         this.message = message;
     }
