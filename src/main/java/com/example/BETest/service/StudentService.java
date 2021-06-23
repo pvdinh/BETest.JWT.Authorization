@@ -3,17 +3,13 @@ package com.example.BETest.service;
 import com.example.BETest.repository.StudentRepository;
 import com.example.BETest.object.Student;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Service
-public class StudentService implements UserDetailsService {
+public class StudentService {
     @Autowired
     private StudentRepository studentRepository;
     private final String SUCCESS ="successful";
@@ -57,20 +53,5 @@ public class StudentService implements UserDetailsService {
                 return EXISTS;
             }
         }else return NOT_EXISTS;
-    }
-
-
-    @Override
-    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        Student student = studentRepository.findStudentById(s);
-        if(student == null){
-            throw new NullPointerException("NOT FOUND : " + s);
-        }else {
-            return org.springframework.security.core.userdetails.User
-                    .withUsername(student.getId())
-                    .password("{noop}"+student.getPassword())
-                    .authorities(Collections.emptyList())
-                    .build();
-        }
     }
 }

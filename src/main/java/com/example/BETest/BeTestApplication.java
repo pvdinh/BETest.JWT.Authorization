@@ -1,11 +1,15 @@
 package com.example.BETest;
 
 import com.example.BETest.object.AccountCredentials;
+import com.example.BETest.repository.AccountRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,30 +33,19 @@ public class BeTestApplication {
 	public String login(@RequestBody AccountCredentials accountCredentials){
 		return "authorization";
 	}
+
+//	@Autowired
+//	private AccountRepository accountRepository;
 //	@Bean
-//	CommandLineRunner runner(StudentRepository studentRepository){
-//		Address address=new Address(
-//				"Vet Nam",
-//				"Nam Dinh",
-//				"700000"
-//		);
+//	CommandLineRunner runner(AccountRepository accountRepository){
 //		return args -> {
-//			Student student = new Student(
-//					"Pham",
-//					"Dinh",
-//					"phamvandinhmta@gmail.com",
-//					Gender.MALE,
-//					address,
-//					Arrays.asList("Toan","Van","Anh"),
-//					BigDecimal.TEN,
-//					LocalDateTime.now()
-//			);
+//			AccountCredentials acc = new AccountCredentials("admin","admin","ADMIN");
 //
-//			if(studentRepository.findStudentByEmail("phamvandinhmta@gmail.com").size() > 0){
+//			if(accountRepository.findAccountCredentialsByUsername("admin") != null){
 //				System.out.println("already exists");
 //			}else {
 //				System.out.println("inserting student");
-//				studentRepository.insert(student);
+//				accountRepository.insert(acc);
 //			}
 //		};
 //	}

@@ -1,21 +1,28 @@
 package com.example.BETest.service;
 
 import com.example.BETest.object.AccountCredentials;
+import com.example.BETest.repository.AccountRepository;
 import com.example.BETest.response.ResponseError;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Date;
-import java.util.Enumeration;
+import java.util.*;
 
 import static java.util.Collections.emptyList;
 
@@ -38,7 +45,7 @@ public class TokenAuthenticationService {
         res.setHeader("Access-Control-Expose-Headers", "*");
         res.addHeader(HEADER_STRING, TOKEN_PREFIX + " " + jwt);
         ObjectMapper objectMapper = new ObjectMapper();
-        res.getWriter().write(objectMapper.writeValueAsString(new ResponseError(HttpStatus.OK.value(), objectMapper.writeValueAsString(new AccountCredentials(username, username)),jwt)));
+        res.getWriter().write(objectMapper.writeValueAsString(new ResponseError(HttpStatus.OK.value(), objectMapper.writeValueAsString(new AccountCredentials(username, username,username)),jwt)));
         res.getWriter().flush();
     }
 
@@ -53,7 +60,15 @@ public class TokenAuthenticationService {
         res.getWriter().flush();
     }
 
+    @Autowired
+    static AccountService accountService;
+
     public static Authentication getAuthentication(HttpServletRequest request) {
+        if (accountService == null){
+            ServletContext servletContext = request.getServletContext();
+            WebApplicationContext webApplicationContext = WebApplicationContextUtils.getWebApplicationContext(servletContext);
+            accountService = webApplicationContext.getBean(AccountService.class);
+        }
         String token = request.getHeader(HEADER_STRING);
         if (token != null) {
             try {
@@ -63,9 +78,15 @@ public class TokenAuthenticationService {
                         .parseClaimsJws(token.replace(TOKEN_PREFIX, ""))
                         .getBody()
                         .getSubject();
-
+                AccountCredentials accountCredentials = accountService.findAccountCredentialByUsername(user);List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+                grantedAuthorities.add(new GrantedAuthority() {
+                    @Override
+                    public String getAuthority() {
+                        return accountCredentials.getRole();
+                    }
+                });
                 return user != null && !isTokenExpired(token) ?
-                        new UsernamePasswordAuthenticationToken(user, null, emptyList()) :
+                        new UsernamePasswordAuthenticationToken(user, null, grantedAuthorities) :
                         null;
             } catch (ExpiredJwtException e) {
                 System.out.println(" Token expired ");

@@ -8,12 +8,14 @@ import com.example.BETest.service.MajorsClassService;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 
 @RestController
 @RequestMapping("/class")
+@PreAuthorize("hasAuthority('ADMIN')")
 @Api(value = "/class", tags = "Class", description = "Manage Class")
 public class MajorsClassController {
     @Autowired

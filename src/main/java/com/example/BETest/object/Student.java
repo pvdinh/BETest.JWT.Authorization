@@ -5,16 +5,12 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 @Document
 public class Student {
     @Id
     private String id;
-    private String password;
     private String firstName;
     private String lastName;
     @Indexed(unique = true)
@@ -22,9 +18,8 @@ public class Student {
     private String gender;
     private String address;
 
-    public Student(String id, String password, String firstName, String lastName, String email, String gender, String address) {
+    public Student(String id, String firstName, String lastName, String email, String gender, String address) {
         this.id = id;
-        this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -38,14 +33,6 @@ public class Student {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getFirstName() {
