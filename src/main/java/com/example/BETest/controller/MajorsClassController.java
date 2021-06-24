@@ -33,6 +33,12 @@ public class MajorsClassController {
         return new Response(HttpStatus.OK.value(), Arrays.asList(majorsClassService.getMajorsClass(id)));
     }
 
+    @GetMapping("/getStudents/{id}")
+    @ApiOperation(value = "Danh sách sinh viên của lớp chuyên ngành")
+    public Response getStudentsInClass(@PathVariable(name = "id") String id) {
+        return new Response(HttpStatus.OK.value(), majorsClassService.getStudentsInClass(id));
+    }
+
     @PostMapping
     @ApiOperation(value = "Thêm mới lớp chuyên ngành")
     public BaseResponse addNew(@RequestBody MajorsClass majorsClass) {

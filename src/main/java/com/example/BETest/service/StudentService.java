@@ -1,5 +1,6 @@
 package com.example.BETest.service;
 
+import com.example.BETest.object.MajorsClass;
 import com.example.BETest.repository.StudentRepository;
 import com.example.BETest.object.Student;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,9 @@ import java.util.List;
 public class StudentService {
     @Autowired
     private StudentRepository studentRepository;
+    @Autowired
+    private MajorsClassService majorsClassService;
+
     private final String SUCCESS ="successful";
     private final String EXISTS ="already exists";
     private final String NOT_EXISTS ="already not exists";
@@ -42,7 +46,14 @@ public class StudentService {
         }
     }
     public void deleteStudent(String id){
-        studentRepository.deleteById(id);
+        try{
+            studentRepository.deleteById(id);
+            MajorsClass majorsClass = majorsClassService.findMajorClassByIdStudent(id);
+            if(majorsClass.getId() != null)
+            majorsClassService.deleteStudentFromClass(id,majorsClass);
+        }catch (Exception e){
+            throw e;
+        }
     }
     public String updateStudent(Student student){
         if(studentRepository.findStudentById(student.getId()) != null){

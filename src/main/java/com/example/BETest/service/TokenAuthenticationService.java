@@ -27,7 +27,7 @@ import java.util.*;
 import static java.util.Collections.emptyList;
 
 public class TokenAuthenticationService {
-    static final long EXPIRATIONTIME = 3600*60*60*10; // 10 days
+    static final long EXPIRATIONTIME = 3600 * 60 * 60 * 10; // 10 days
     static final String SECRET = "ThisIsASecret";
     static final String TOKEN_PREFIX = "Bearer";
     static final String HEADER_STRING = "Authorization";
@@ -44,8 +44,9 @@ public class TokenAuthenticationService {
         res.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
         res.setHeader("Access-Control-Expose-Headers", "*");
         res.addHeader(HEADER_STRING, TOKEN_PREFIX + " " + jwt);
+        AccountCredentials accountCredentials = accountService.findAccountCredentialByUsername(username);
         ObjectMapper objectMapper = new ObjectMapper();
-        res.getWriter().write(objectMapper.writeValueAsString(new ResponseError(HttpStatus.OK.value(), objectMapper.writeValueAsString(new AccountCredentials(username, username,username)),jwt)));
+        res.getWriter().write(objectMapper.writeValueAsString(new ResponseError(HttpStatus.OK.value(), objectMapper.writeValueAsString(new AccountCredentials(username, "***", accountCredentials.getRole())), jwt)));
         res.getWriter().flush();
     }
 
@@ -56,7 +57,7 @@ public class TokenAuthenticationService {
         res.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
         res.setHeader("Access-Control-Expose-Headers", "*");
         ObjectMapper objectMapper = new ObjectMapper();
-        res.getWriter().write(objectMapper.writeValueAsString(new ResponseError(HttpStatus.UNAUTHORIZED.value(), "Fail","Fail")));
+        res.getWriter().write(objectMapper.writeValueAsString(new ResponseError(HttpStatus.UNAUTHORIZED.value(), "Fail", "Fail")));
         res.getWriter().flush();
     }
 
@@ -64,7 +65,7 @@ public class TokenAuthenticationService {
     static AccountService accountService;
 
     public static Authentication getAuthentication(HttpServletRequest request) {
-        if (accountService == null){
+        if (accountService == null) {
             ServletContext servletContext = request.getServletContext();
             WebApplicationContext webApplicationContext = WebApplicationContextUtils.getWebApplicationContext(servletContext);
             accountService = webApplicationContext.getBean(AccountService.class);
@@ -78,7 +79,8 @@ public class TokenAuthenticationService {
                         .parseClaimsJws(token.replace(TOKEN_PREFIX, ""))
                         .getBody()
                         .getSubject();
-                AccountCredentials accountCredentials = accountService.findAccountCredentialByUsername(user);List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+                AccountCredentials accountCredentials = accountService.findAccountCredentialByUsername(user);
+                List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
                 grantedAuthorities.add(new GrantedAuthority() {
                     @Override
                     public String getAuthority() {

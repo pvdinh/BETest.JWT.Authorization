@@ -1,11 +1,13 @@
 package com.example.BETest.service;
 
 import com.example.BETest.object.MajorsClass;
+import com.example.BETest.object.Student;
 import com.example.BETest.repository.MajorsClassRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -52,8 +54,32 @@ public class MajorsClassService {
     }
 
     public void deleteStudentFromClass(String studentId, MajorsClass majorsClass) {
-        majorsClass.getListStudents().remove(studentId);
-        majorsClass.setListStudents(majorsClass.getListStudents());
-        majorsClassRepository.save(majorsClass);
+        try {
+            majorsClass.getListStudents().remove(studentId);
+            majorsClassRepository.save(majorsClass);
+        }catch (Exception e){
+            throw e;
+        }
+    }
+
+    public List<Student> getStudentsInClass(String id){
+        List<Student> students = new ArrayList<>();
+        MajorsClass majorsClass = majorsClassRepository.findMajorsClassById(id);
+        majorsClass.getListStudents().forEach(s -> {
+            students.add(studentService.findStudentById(s));
+        });
+        return students;
+    }
+
+    public MajorsClass findMajorClassByIdStudent(String id){
+        MajorsClass majorsClass = new MajorsClass();
+        for (MajorsClass m : majorsClassRepository.findAll()
+             ) {
+            if(m.getListStudents().contains(id)){
+                majorsClass =m;
+                break;
+            }
+        }
+        return majorsClass;
     }
 }
