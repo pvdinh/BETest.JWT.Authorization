@@ -89,6 +89,15 @@
 			<version>5.5.0</version>
 		</dependency>
 
+<!--		junit test-->
+		<!-- https://mvnrepository.com/artifact/junit/junit -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+			<scope>test</scope>
+		</dependency>
+<!-- -&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;-->
 	</dependencies>
 
 	<build>
